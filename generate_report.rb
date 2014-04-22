@@ -4,12 +4,22 @@ require 'erb'
 require 'yaml'
 require 'ostruct'
 require 'rubygems'
-require 'active_support'
+#require 'active_support'
 
 module Puppet; end
 module Puppet::Resource; end
 module Puppet::Transaction; end
 module Puppet::Util; end
+
+class Fixnum
+  SECONDS_IN_DAY = 24 * 60 * 60
+  def day
+    self * SECONDS_IN_DAY
+  end
+  def ago
+    Time.now - self
+  end
+end
 
 # http://projects.puppetlabs.com/projects/puppet/wiki/Report_Format_2
 class Puppet::Transaction::Report
@@ -94,7 +104,8 @@ module DataGenerator
 
   def self.generate_hostname
     @domain ||= generate_word
-    @ext ||= ["net", "org", "com", "co.uk"].random_element
+    #@ext ||= ["net", "org", "com", "co.uk"].random_element
+    @ext ||= ["net", "org", "com", "co.uk"].choice
 
     host = @domain
     host = generate_word until host != @domain
@@ -108,7 +119,8 @@ module DataGenerator
   end
 
   def self.generate_word
-    words.random_element
+    #words.random_element
+    words.choice
   end
 
   private
